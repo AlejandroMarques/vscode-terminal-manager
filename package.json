@@ -1,0 +1,89 @@
+{
+  "name": "vscode-terminal-manager",
+  "displayName": "Terminal Manager",
+  "description": "Open terminals with names and executes commands automatically when a project is opened",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.106.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "workspaceContains:**/.vscode/terminal-manager.json",
+    "onCommand:terminal-manager.runTerminals"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "terminal-manager.runTerminals",
+        "title": "[Terminal Manager] Run terminals"
+      }
+    ],
+    "configuration": {
+      "title": "Terminal Extension",
+      "properties": {
+        "terminalExtension.terminals": {
+          "type": "array",
+          "description": "Configured Terminals",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Terminal's name when created"
+              },
+              "initialPath": {
+                "type": "string",
+                "description": "Initial route"
+              },
+              "shellPath": {
+                "type": "string",
+                "description": "Shell's path"
+              },
+              "commands": {
+                "type": "array",
+                "description": "Command's list that will be executed automatically",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          "default": []
+        },
+        "terminalExtension.focusOnTerminal": {
+          "type": "string",
+          "description": "Name of the terminal you want to focus on (has to be the same as the name on the array)",
+          "default": ""
+        },
+        "terminalExtension.runAutomatically": {
+          "type": "boolean",
+          "description": "Set true if you want the terminals to be created when you open the project, false if you want to create them using the command",
+          "default": false
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "pnpm run compile && pnpm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.106.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "typescript-eslint": "^8.46.3",
+    "eslint": "^9.39.1",
+    "typescript": "^5.9.3",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
