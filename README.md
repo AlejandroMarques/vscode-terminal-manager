@@ -1,71 +1,188 @@
-# terminal-manager README
+![alt text](./images/banner.png "Terminal Manager")
 
-This is the README for your extension "terminal-manager". After writing up a brief description, we recommend including the following sections.
+# TERMINAL MANAGER
+
+Terminal Manager automatically creates and manages multiple VS Code terminals based on a JSON configuration file or workspace settings. It simplifies running development scripts or commands by pre-configuring terminals with custom paths, shells, and commands.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- Create multiple terminals automatically when a project or workspace opens
+- Run custom commands in each terminal
+- Support for relative and absolute paths
+- Custom shell executable per terminal
+- Focus on a specific terminal after creation
+- Manual execution via Command Palette
+- Multi-root workspace support
 
-For example if there is an image subfolder under your extension project workspace:
+## Installation
 
-\!\[feature X\]\(images/feature-x.png\)
+Install directly from the [VS Code Marketplace](https://marketplace.visualstudio.com/) or clone the repository to inspect the code.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## Configuration
 
-## Requirements
+The extension can be configured in **two ways**:
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+### 1. JSON configuration file
 
-## Extension Settings
+Create a file `.vscode/terminal-manager.json` at the root of your project.
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+You can also specify a **custom path** for the configuration file in the settings:
 
-For example:
+```json
+{
+  "terminalExtension.configPath": "./config/terminal-manager.json"
+}
+```
 
-This extension contributes the following settings:
+If no manual path is provided, the extension will look for `.vscode/terminal-manager.json` by default.
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+Example configuration file at the default location:
 
-## Known Issues
+```json
+{
+  "terminals": [
+    {
+      "name": "Backend",
+      "initialPath": "./backend",
+      "commands": ["npm run dev"],
+      "shellPath": "C:\\Program Files\\Git\\bin\\bash.exe"
+    },
+    {
+      "name": "Frontend",
+      "initialPath": "./frontend",
+      "commands": ["npm start"]
+    }
+  ],
+  "focusOnTerminal": "Backend",
+  "runAutomatically": true
+}
+```
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- initialPath: Relative paths are resolved relative to the project root. Absolute paths are supported.
 
-## Release Notes
+- commands: Commands to execute in the terminal after creation.
 
-Users appreciate release notes as you update your extension.
+- focusOnTerminal: Terminal to focus after creation by name. Defaults to the last created terminal.
 
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+- runAutomatically: If true, terminals are created automatically when the project/workspace opens.
 
 ---
 
-## Following extension guidelines
+### **Configuration: Workspace/User Settings**
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+### 2. Workspace or User Settings
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+You can also configure via `settings.json` or `.code-workspace`:
 
-## Working with Markdown
+```json
+{
+  "terminalExtension.configPath": "./config/terminal-manager.json",
+  "terminalExtension.terminals": [
+    {
+      "name": "Backend",
+      "initialPath": "./backend",
+      "commands": ["npm run dev"]
+    }
+  ],
+  "terminalExtension.focusOnTerminal": "Backend",
+  "terminalExtension.runAutomatically": true
+}
+```
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+- configPath allows the user to define a custom location for the JSON configuration file. If omitted, the extension defaults to .vscode/terminal-manager.json.
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
+---
 
-## For more information
+### **Configuration Options Table**
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+## Configuration Options
 
-**Enjoy!**
+| Option                        | Type                | Required | Description                                                                                                              |
+| ----------------------------- | ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `terminals`                   | `TerminalOptions[]` | ✅       | List of terminals to create. Each terminal supports optional properties: `name`, `initialPath`, `shellPath`, `commands`. |
+| `TerminalOptions.name`        | `string`            | ❌       | Terminal name. Defaults to `terminal-<index>`.                                                                           |
+| `TerminalOptions.initialPath` | `string`            | ❌       | Working directory for the terminal. Relative to project root if starts with `./`. Defaults to project root.              |
+| `TerminalOptions.shellPath`   | `string`            | ❌       | Custom shell executable. Defaults to VS Code default shell.                                                              |
+| `TerminalOptions.commands`    | `string[]`          | ❌       | Commands to run on terminal creation.                                                                                    |
+| `focusOnTerminal`             | `string \| number`  | ❌       | Terminal to focus after creation (name or index). Defaults to last terminal.                                             |
+| `runAutomatically`            | `boolean`           | ❌       | Whether terminals should be created automatically when the workspace opens. Defaults to `false`.                         |
+
+## Usage
+
+### Automatic Terminal Creation
+
+If `runAutomatically` is set to `true`, terminals will be created automatically when the project or workspace opens.
+
+### Manual Terminal Creation
+
+At any time, you can create the terminals manually:
+
+1. Open **Command Palette** (`F1` or `Ctrl+Shift+P`)
+2. Search for **[Terminal Manager]: Run Terminals**
+3. Execute it to create terminals based on the current configuration.
+
+## Multi-Root Workspace
+
+For workspaces with multiple folders:
+
+- Terminals are created relative to the **first workspace folder** by default.
+- Absolute paths are always respected.
+- You can define multiple terminals pointing to different folders by specifying `initialPath` accordingly.
+
+## Visual Example
+
+Suppose your project structure is:
+
+```
+project-root/
+├─ .vscode/
+│ └─ terminal-manager.json
+├─ backend/
+│ └─ package.json
+└─ frontend/
+└─ package.json
+```
+
+With the configuration:
+
+```json
+{
+  "terminals": [
+    {
+      "name": "Backend",
+      "initialPath": "./backend",
+      "commands": ["npm run dev"]
+    },
+    {
+      "name": "Frontend",
+      "initialPath": "./frontend",
+      "commands": ["npm start"]
+    }
+  ],
+  "focusOnTerminal": "Backend",
+  "runAutomatically": true
+}
+```
+
+- A terminal named Backend will open in project-root/backend and run npm run dev.
+
+- A terminal named Frontend will open in project-root/frontend and run npm start.
+
+- The Backend terminal will be focused automatically after creation.
+
+---
+
+### **Notes and License**
+
+## Notes
+
+- Relative paths are resolved **relative to the root of the project**, even if the configuration file is inside `.vscode`.
+- Focus and commands can be customized per terminal.
+- Manual execution ensures that terminals can be recreated at any time without reopening the workspace.
+- Absolute paths are fully supported, allowing you to open terminals anywhere on your system.
+
+---
+
+## License
+
+[MIT](LICENSE)
