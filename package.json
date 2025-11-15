@@ -10,6 +10,7 @@
     "url": "https://github.com/AlejandroMarques/vscode-terminal-manager.git"
   },
   "icon": "images/logo.png",
+  "publisher": "lxmg",
   "categories": [
     "Other"
   ],
