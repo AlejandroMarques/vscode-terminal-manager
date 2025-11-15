@@ -1,4 +1,4 @@
-![alt text](./images/banner.png "Terminal Manager")
+[![banner.png](https://i.postimg.cc/3wT3J4Zy/banner.png)](https://postimg.cc/K1J60YwF)
 
 # TERMINAL MANAGER
 

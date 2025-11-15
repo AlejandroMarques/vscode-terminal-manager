@@ -6,6 +6,10 @@
   "engines": {
     "vscode": "^1.106.0"
   },
+  "repository": {
+    "url": "https://github.com/AlejandroMarques/vscode-terminal-manager.git"
+  },
+  "icon": "images/logo.png",
   "categories": [
     "Other"
   ],
