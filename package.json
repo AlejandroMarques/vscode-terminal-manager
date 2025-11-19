@@ -4,7 +4,7 @@
   "description": "Open terminals with names and executes commands automatically when a project is opened",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.106.0"
+    "vscode": ">=1.70.0"
   },
   "repository": {
     "url": "https://github.com/AlejandroMarques/vscode-terminal-manager.git"
@@ -30,7 +30,7 @@
     "configuration": {
       "title": "Terminal Extension",
       "properties": {
-        "terminalExtension.terminals": {
+        "terminalManager.terminals": {
           "type": "array",
           "description": "Configured Terminals",
           "items": {
@@ -60,12 +60,12 @@
           },
           "default": []
         },
-        "terminalExtension.focusOnTerminal": {
+        "terminalManager.focusOnTerminal": {
           "type": "string",
           "description": "Name of the terminal you want to focus on (has to be the same as the name on the array)",
           "default": ""
         },
-        "terminalExtension.runAutomatically": {
+        "terminalManager.runAutomatically": {
           "type": "boolean",
           "description": "Set true if you want the terminals to be created when you open the project, false if you want to create them using the command",
           "default": false
@@ -82,7 +82,7 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.106.0",
+    "@types/vscode": "^1.70.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
     "typescript-eslint": "^8.46.3",

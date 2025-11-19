@@ -4,18 +4,28 @@ import * as path from "path";
 import { TerminalExtensionConfiguration } from "./types/types";
 
 export async function getTerminalManagerConfig(): Promise<TerminalExtensionConfiguration | null> {
-  // 1. Try reading configuration from workspace settings.json
-  const config = vscode.workspace.getConfiguration("terminalManager");
-  const workspaceConfig: TerminalExtensionConfiguration | undefined =
-    config.get("config");
+  // 1. Try reading configuration from workspace settings
+  const config = vscode.workspace.getConfiguration("terminalManager", null);
 
-  if (workspaceConfig) {
-    console.log("[TerminalManager] Config found in workspace settings.json");
+  const terminals = config.get<any[]>("terminals");
+  const focusOnTerminal = config.get<string | undefined>("focusOnTerminal");
+  const runAutomatically = config.get<boolean>("runAutomatically");
+
+  // Si al menos 'terminals' está definido, construimos el objeto de configuración
+  if (terminals && terminals.length > 0) {
+    console.log("[TerminalManager] Config found in workspace settings");
+
+    const workspaceConfig: TerminalExtensionConfiguration = {
+      terminals,
+      focusOnTerminal,
+      runAutomatically,
+    };
+
     return workspaceConfig;
   }
 
   console.log(
-    "[TerminalManager] No config in settings.json, searching for terminal-manager.json..."
+    "[TerminalManager] No config in settings, searching for terminal-manager.json..."
   );
 
   // 2. Determine project root folder
@@ -34,7 +44,7 @@ export async function getTerminalManagerConfig(): Promise<TerminalExtensionConfi
   }
 
   // 3. Manual path provided by user (if any)
-  const manualPath = config.get<string>("path");
+  const manualPath = config.get<string>("configPath"); // ⚠️ Cambiado de "path" a "configPath"
 
   // 3.1 If user provided a manual path → try that first
   if (manualPath && manualPath.trim() !== "") {

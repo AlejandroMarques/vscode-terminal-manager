@@ -7,6 +7,6 @@ export type TerminalOptions = {
 
 export type TerminalExtensionConfiguration = {
   terminals: TerminalOptions[];
-  focusOnTerminal: string;
-  runAutomatically: boolean;
+  focusOnTerminal?: string;
+  runAutomatically?: boolean;
 };
