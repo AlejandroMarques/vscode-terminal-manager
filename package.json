@@ -2,7 +2,7 @@
   "name": "lxmg-terminal-manager",
   "displayName": "VS Terminal Manager",
   "description": "Open terminals with names and executes commands automatically when a project is opened",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": ">=1.70.0"
   },
